@@ -1,10 +1,9 @@
 <?php
 
-<<<<<<< HEAD
+
 /** @var Router $router */
-=======
-/** @var \Laravel\Lumen\Routing\Router $router */
->>>>>>> ad4c1f2c4fefe4c3eb66e060e861b588fb78c83d
+/** @var Router $router */
+
 
 /*
 |--------------------------------------------------------------------------

@@ -9,8 +9,12 @@ use App\Shot;
 use App\Tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\View;
 
+/**
+ * @group shots
+ *
+ * Api for shots
+ */
 class ShotController extends ApiController
 {
     public function getShotById($id)
@@ -42,12 +46,12 @@ class ShotController extends ApiController
         }
         // TODO not found error
     }
-
     public function getAllShots()
     {
-        return Cache::remember('shots', 15, function () {
-            return new ShotsResource(Shot::with(['user', 'comments', 'images', 'videos', 'gifs', 'tags'])->orderBy('update_at')->paginate(10));
+        $data = Cache::remember('shots', 60, function () {
+            return new ShotsResource(Shot::with(['user', 'comments', 'images', 'videos', 'gifs', 'tags'])->orderBy('update_at')->paginate(1));
         });
+        return $data;
 
     }
 

@@ -18,5 +18,7 @@ class TagsTableSeeder extends Seeder
             Tag::create(['tag' => $ele, 'count' => 0]);
         }
 
+
+
     }
 }
