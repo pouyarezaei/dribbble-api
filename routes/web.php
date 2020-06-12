@@ -22,7 +22,7 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
-$router->group(['prefix' => 'api/v1/' ,'middleware' => 'throttle:10,1'], function () use ($router) {
+$router->group(['prefix' => 'api/v1/' ,'middleware' => 'throttle:15,1'], function () use ($router) {
 
     $router->group(['prefix' => 'user'], function () use ($router) {
         $router->get("/profile/{username}", ['as' => 'api.v1.user.profile', 'uses' => 'UserController@profile']);
