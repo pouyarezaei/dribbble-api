@@ -6,8 +6,8 @@
     "type": "project",
     "require": {
         "php": "^7.2.5",
-        "illuminate/redis": "^7.14",
         "laravel/lumen-framework": "^7.0",
+        "illuminate/redis": "^7.14",
         "predis/predis": "^1.1",
         "ext-json": "*"
     },
