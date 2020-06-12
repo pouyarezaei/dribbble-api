@@ -21,9 +21,8 @@ use Laravel\Lumen\Routing\Router;
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
-$router->get("/viewss", ['as' => 'api.v1.user.profile', 'uses' => 'ShotController@viewss']);
 
-$router->group(['prefix' => 'api/v1/'], function () use ($router) {
+$router->group(['prefix' => 'api/v1/' ,'middleware' => 'throttle:10,1'], function () use ($router) {
 
     $router->group(['prefix' => 'user'], function () use ($router) {
         $router->get("/profile/{username}", ['as' => 'api.v1.user.profile', 'uses' => 'UserController@profile']);
@@ -32,9 +31,10 @@ $router->group(['prefix' => 'api/v1/'], function () use ($router) {
         $router->put("/update", ['as' => 'api.v1.user.update', 'uses' => 'UserController@update']);
     });
 
-    $router->group(['prefix' => 'job'], function () use ($router) {
-        $router->get("/{id}", ['as' => 'api.v1.job', 'uses' => 'JobController@getJobById']);
-        $router->put("/{id}", ['as' => 'api.v1.job', 'uses' => 'JobController@updateJobById']);
+    $router->group(['prefix' => 'jobs'], function () use ($router) {
+        $router->get("/{id}", ['as' => 'api.v1.job.getJobById', 'uses' => 'JobController@getJobById']);
+        $router->put("/{id}", ['as' => 'api.v1.updateJobById', 'uses' => 'JobController@updateJobById']);
+        $router->get("/", ['as' => 'api.v1.getAllJob' ,'uses' => 'JobController@getAllJob']);
     });
     $router->group(['prefix' => 'shots'], function () use ($router) {
         $router->get("/", ['as' => 'api.v1.shots.all', 'uses' => 'ShotController@getAllShots']);

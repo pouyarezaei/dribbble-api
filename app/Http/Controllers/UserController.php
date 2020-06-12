@@ -5,7 +5,11 @@ namespace App\Http\Controllers;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
-
+/**
+ * @group users
+ *
+ * Api for users
+ */
 class UserController extends ApiController
 {
     public function login(Request $request)

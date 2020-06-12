@@ -46,50 +46,44 @@ class ShotController extends ApiController
         }
         // TODO not found error
     }
+
     public function getAllShots()
     {
-        $data = Cache::remember('shots', 60, function () {
+//        $data = Cache::remember('shots', 60, function () {
             return new ShotsResource(Shot::with(['user', 'comments', 'images', 'videos', 'gifs', 'tags'])->orderBy('update_at')->paginate(1));
-        });
-        return $data;
+//        });
+
 
     }
 
     public function addMedia(Request $request, $id)
     {
-        $shot = Shot::find($id);
-        $file = $request->file('file');
-        $mime = $file->getClientMimeType();
-        $fileName = time() . $file->getClientOriginalName();
-        switch ($mime) {
-            case 'image/gif':
-                $shot->gifs()->create(['gif' => '/shots/gif/' . $fileName]);
-                $file->move('shots/gif', $fileName);
-                break;
-            case 'image/png':
-            case 'image/jpeg':
-                $shot->images()->create(['image' => '/shots/images/' . $fileName]);
-                $file->move('shots/image', $fileName);
-                break;
-            case 'video/mp4':
-                $shot->videos()->create(['video' => '/shots/videos/' . $fileName]);
-                $file->move('shots/videos', $fileName);
-                break;
+        if ($request->hasFile('file')) {
+            $shot = Shot::find($id);
+            $file = $request->file('file');
+            $mime = $file->getClientMimeType();
+            $fileName = time() . $file->getClientOriginalName();
+            switch ($mime) {
+                case 'image/gif':
+                    $shot->gifs()->create(['gif' => '/shots/gif/' . $fileName]);
+                    $file->move('shots/gif', $fileName);
+                    break;
+                case 'image/png':
+                case 'image/jpeg':
+                    $shot->images()->create(['image' => '/shots/images/' . $fileName]);
+                    $file->move('shots/image', $fileName);
+                    break;
+                case 'video/mp4':
+                    $shot->videos()->create(['video' => '/shots/videos/' . $fileName]);
+                    $file->move('shots/videos', $fileName);
+                    break;
+                default:
+                    // TODO file not supports
+            }
+        } else {
+            // TODO file not exist
         }
-//        if ($mime == 'image/gif') {
-//            $shot->gifs()->create(['gif' => '/shots/gif/' . $fileName]);
-//            $file->move('shots/gif', $fileName);
-//        } elseif ($mime == 'image/jpeg' || $mime == 'image/png') {
-//            $shot->images()->create(['image' => '/shots/images/' . $fileName]);
-//            $file->move('shots/image', $fileName);
-//
-//        } elseif ($mime == 'video/mp4') {
-//            $shot->videos()->create(['video' => '/shots/videos/' . $fileName]);
-//            $file->move('shots/videos', $fileName);
-//
-//        } else {
-//            // Todo get some error for not supported files
-//        }
+
     }
 
     public function getCommentByShotId($id)
@@ -99,12 +93,6 @@ class ShotController extends ApiController
             return $shot->comments;
         }
         // TODO some error for not founded
-    }
-
-    public function viewss()
-    {
-        $arr = ['name' => 'payam', 'family' => 'reza'];
-        return view('view', $arr);
     }
 
 }

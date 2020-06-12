@@ -4,12 +4,16 @@
 namespace App\Http\Controllers;
 
 
+use App\Http\Resources\JobsResource;
 use App\Job;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\ValidationException;
 
-
+/**
+ * @group job
+ *
+ * Api for job
+ */
 class JobController extends ApiController
 {
     public function getJobById($id)
@@ -20,6 +24,19 @@ class JobController extends ApiController
             return $this->respond($job);
         }
         return $this->respondWithError(['Not found'], 404);
+    }
+
+    public function getAllJob(Request $request)
+    {
+
+        $query = Job::with('user');
+        if ($request->has('order')) {
+            $query->orderBy('update_at', $request['order']);
+        } else if ($request->has('city')) {
+            $query->where('location', 'like', $request['city']);
+        }
+        $data = new JobsResource($query->paginate(10));
+        return view('debug');
     }
 
     public function updateJobById(Request $request, $id)
