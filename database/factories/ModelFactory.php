@@ -33,7 +33,7 @@ $factory->define(User::class, function (Faker $faker) {
         'bio' => $faker->paragraph,
         'password' => "password",
         'email' => $faker->email,
-        'remember_token' => $faker->md5,
+        'api_token' => $faker->sha1,
         'city' => $faker->city,
         'gender' => $faker->randomElement(['male', 'female']),
         'role' => $faker->randomElement(['designer', 'employee'])
@@ -65,7 +65,8 @@ $factory->define(Shot::class, function (Faker $faker) {
 $factory->define(Image::class, function (Faker $faker) {
 
     return [
-        'image' => "/shots/images/1591298617mo.png"
+        'image' => "https://i.picsum.photos/id/405/3000/1688.jpg?hmac=wihswILm48QrPF9GurD8QtSqMDtOY28jEWZPvlwderk",
+        'poster' => $faker->boolean
     ];
 });
 $factory->define(Gif::class, function (Faker $faker) {
