@@ -31,7 +31,7 @@ class User extends Model
      * @var array
      */
     protected $hidden = [
-        'password', 'id', 'remember_token'
+        'password', 'id'
     ];
     /**
      * The model's default values for attributes.
@@ -43,6 +43,12 @@ class User extends Model
     public function getUsernameAttribute()
     {
         return $this->attributes['username'];
+
+    }
+
+    public function getIdAttribute()
+    {
+        return $this->attributes['id'];
 
     }
 
@@ -65,6 +71,32 @@ class User extends Model
 
     }
 
+
+    public static function findByUsername($username)
+    {
+        return static::where('username', '=', $username)->first();
+    }
+
+    public function check($password)
+    {
+        return Hash::check($password, $this->attributes['password']);
+    }
+
+    public function jobs()
+    {
+        return $this->hasMany(Job::class);
+    }
+
+    public function shots()
+    {
+        return $this->hasMany(Shot::class);
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
     public static function rules($merge = [])
     {
         return array_merge(
@@ -78,26 +110,5 @@ class User extends Model
             ],
             $merge
         );
-    }
-
-    public function check($password)
-    {
-        return Hash::check($password, $this->attributes['password']);
-    }
-
-    public function jobs()
-    {
-        return $this->hasMany(Job::class);
-    }
-
-
-    public function shots()
-    {
-        return $this->hasMany(Shot::class);
-    }
-
-    public function comments()
-    {
-        return $this->hasMany(Comment::class);
     }
 }
