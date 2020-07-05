@@ -3,80 +3,36 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Http\Response;
 
-class ApiController extends Controller
+abstract class ApiController extends RespondController
 {
     /**
-         * @var $statusCode
+     * @return ResourceCollection | Response
      */
-    protected $statusCode = 200;
+    public abstract function getAll();
 
     /**
-     * @return mixed
+     * @param $id int | mixed
+     * @return ResourceCollection | Response
      */
-    public function getStatusCode()
-    {
-        return $this->statusCode;
-    }
+    public abstract function getById($id);
 
     /**
-     * @param mixed $statusCode
-     * @return $this
+     * @param Request $request
+     * @return Response
      */
-    public function setStatusCode($statusCode)
-    {
-        $this->statusCode = $statusCode;
-        return $this;
-    }
+    public abstract function store(Request $request);
 
     /**
-     * @param int $statusCode
-     * @param string message
-     * @return JsonResponse not found error
+     * @param Request $request
+     * @param $id int | mixed
+     * @return Response
      */
-    public function respondNotFound($statusCode = 404, $data = "Not Found!")
-    {
-        return $this->respondWithError($statusCode, $data);
-    }
+    public abstract function updateById(Request $request, $id);
 
-    /**
-     * @param array $data
-     * @param int $statusCode
-     * @return JsonResponse validation failed  error
-     */
-    public function respondNotValid(array $data, $statusCode = 422)
-    {
-        return $this->respondWithError($data, $statusCode);
-    }
+    public abstract function deleteById($id);
 
-    /**
-     * @param int $statusCode
-     * @param string message
-     * @return JsonResponse not found error
-     */
-    public function respondInternalError($statusCode = 500, $data = "Internal Error!")
-    {
-        return $this->respondWithError($statusCode, $data);
-    }
-
-    /**
-     * @param array $data
-     * @param array http headers
-     * @return JsonResponse data
-     */
-    public function respond($data, $headers = [])
-    {
-        return response()->json(['status' => $this->getStatusCode(), 'data' => $data], $this->getStatusCode(), $headers);
-    }
-
-    /**
-     * @param int $statusCode
-     * @param $data
-     * @return JsonResponse error
-     */
-    public function respondWithError($data, $statusCode)
-    {
-        return $this->setStatusCode($statusCode)->respond($data);
-    }
 }
