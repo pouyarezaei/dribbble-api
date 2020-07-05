@@ -22,7 +22,7 @@ class Comment extends Model
      */
 
     protected $fillable = [
-        'user_id', 'body'
+        'user_id', 'body', 'shot_id'
     ];
     protected $hidden = [];
     /**
@@ -34,11 +34,11 @@ class Comment extends Model
 
     public function user()
     {
-        $this->belongsTo('App\User');
+        return $this->belongsTo('App\User');
     }
 
     public function shot()
     {
-        $this->belongsTo('App\Shot');
+        return $this->belongsTo('App\Shot');
     }
 }
