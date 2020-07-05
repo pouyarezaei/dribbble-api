@@ -66,4 +66,16 @@ class Shot extends Model
         return $this->belongsToMany('App\Tag');
     }
 
+    public static function rules($merge = [])
+    {
+        return array_merge(
+            [
+                'title' => 'required',
+                'description' => 'required',
+
+            ],
+            $merge
+        );
+    }
+
 }
