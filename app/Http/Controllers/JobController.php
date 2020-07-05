@@ -6,53 +6,76 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\JobsResource;
 use App\Job;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 /**
- * @group job
+ * @group Job
  *
  * Api for job
  */
 class JobController extends ApiController
 {
-    public function getJobById($id)
+    /**
+     * @queryParam  page required The page number. Example: 4
+     */
+    public function getAll()
     {
-        $job = Job::find($id);
+        // TODO fix page size
+        // TODO dont forget redis cache
+        return new JobsResource(Job::with('user')->paginate(1));
+    }
+
+    /**
+     * @param $id int
+     * @urlParam  id required The id of the job. Example: 2
+     * @return JobsResource|JsonResponse
+     */
+    public function getById($id)
+    {
+        $job = Job::getFirstById($id);
 
         if (!is_null($job)) {
-            return $this->respond($job);
+            return new JobsResource($job);
         }
-        return $this->respondWithError(['Not found'], 404);
+        return $this->respondNotFoundError();
     }
 
-    public function getAllJob(Request $request)
+    public function store(Request $request)
     {
-
-        $query = Job::with('user');
-        if ($request->has('order')) {
-            $query->orderBy('update_at', $request['order']);
-        } else if ($request->has('city')) {
-            $query->where('location', 'like', $request['city']);
+        $validate = Validator::make($request->all(), Job::rules());
+        if ($validate->errors()->isEmpty()) {
+            Job::create($request->all());
+        } else {
+            return $this->respond($validate->failed());
         }
-        $data = new JobsResource($query->paginate(10));
-        return view('debug');
     }
 
-    public function updateJobById(Request $request, $id)
+    /**
+     * @param Request $request
+     * @param $id int
+     * @urlParam  id required The id of the job. Example: 2
+     * @return JsonResponse
+     */
+    public function updateById(Request $request, $id)
     {
         // TODO should first check remember token and find user id and check user id with job user_id
-        $job = Job::find($id);
-
+        $job = Job::getFirstById($id);
         if (!is_null($job)) {
-
             $validate = Validator::make($request->all(), Job::rules());
             if ($validate->errors()->isEmpty()) {
                 $job->update($request->all());
-                return $this->respond(['updated']);
+                return $this->respondSuccess();
             }
-            return $this->respondWithError($validate->errors(), 422);
+            return $this->respondValidateError($validate->errors());
         }
-        return $this->respondWithError(['Not found'], 404);
+        return $this->respondNotFoundError();
+    }
+
+
+    public function deleteById($id)
+    {
+        // TODO: Implement deleteById() method.
     }
 }
