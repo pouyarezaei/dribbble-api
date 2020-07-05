@@ -26,7 +26,7 @@ class CreateUsersTable extends Migration
             $table->enum('role', ['designer', 'employee']);
             $table->string('password');
             $table->string('city')->nullable();
-            $table->rememberToken();
+            $table->string('api_token');
             $table->timestamps();
         });
     }
