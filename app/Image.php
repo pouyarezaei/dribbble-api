@@ -21,7 +21,7 @@ class Image extends Model
      */
 
     protected $fillable = [
-            'image'
+        'image', 'poster'
     ];
     protected $hidden = [];
     /**
@@ -30,6 +30,7 @@ class Image extends Model
      * @var array
      */
     protected $attributes = [];
+
     public function shot()
     {
         return $this->belongsTo('App\Shot');
