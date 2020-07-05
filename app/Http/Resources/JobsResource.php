@@ -8,6 +8,13 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class JobsResource extends ResourceCollection
 {
+    protected $status;
+
+    public function __construct($resource, $status = 200)
+    {
+        parent::__construct($resource);
+        $this->status = $status;
+    }
 
     /**
      * Transform the resource collection into an array.
@@ -19,7 +26,7 @@ class JobsResource extends ResourceCollection
     public function toArray($request)
     {
 
-        return ['data' => $this->collection->transform(function ($job) {
+        return ['status' => $this->status,'data' => $this->collection->transform(function ($job) {
             return [
                 'id' => $job->id,
                 'organization_name' => $job->organization_name,
@@ -31,8 +38,8 @@ class JobsResource extends ResourceCollection
                 'active' => $job->active,
                 'url' => $job->url,
                 'website' => $job->website,
-                'user_username' => $job->user->username,
-                'user_avatar' => $job->user->avatar_url,
+                'user' => $job->user,
+
             ];
         })];
     }
