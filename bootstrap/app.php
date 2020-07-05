@@ -1,9 +1,6 @@
 <?php
 
 
-use App\Http\Middleware\ThrottleRequests;
-use Illuminate\Routing\Middleware\ThrottleRequestsWithRedis;
-
 require_once __DIR__ . '/../vendor/autoload.php';
 
 (new Laravel\Lumen\Bootstrap\LoadEnvironmentVariables(
@@ -81,7 +78,7 @@ $app->configure('apidoc');
 // ]);
 
 $app->routeMiddleware([
-    // 'auth' => App\Http\Middleware\Authenticate::class,
+    'auth' => App\Http\Middleware\Authenticate::class,
     'throttle' => App\Http\Middleware\RedisRateLimiterMiddleware::class,
 
 ]);
@@ -101,10 +98,13 @@ if (env('APP_DEBUG')) {
 }
 
 $app->register(App\Providers\AuthServiceProvider::class);
+$app->register(App\Providers\ShotServiceProvider::class);
+$app->register(App\Providers\UserServiceProvider::class);
+$app->register(App\Providers\AppServiceProvider::class);
+$app->register(Illuminate\Redis\RedisServiceProvider::class);
 $app->register(Mpociot\ApiDoc\ApiDocGeneratorServiceProvider::class);
 $app->register(Laravel\Tinker\TinkerServiceProvider::class);
-$app->register(Illuminate\Redis\RedisServiceProvider::class);
-// $app->register(App\Providers\AppServiceProvider::class);
+
 // $app->register(App\Providers\EventServiceProvider::class);
 
 
