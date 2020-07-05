@@ -21,7 +21,7 @@ class Job extends Model
      */
 
     protected $fillable = [
-        'organization_name', 'title', 'location', 'description', 'category', 'role_type', 'website', 'active'
+        'user_id', 'organization_name', 'title', 'location', 'description', 'category', 'role_type', 'website', 'active'
     ];
 
     /**
@@ -38,9 +38,16 @@ class Job extends Model
      * @var array
      */
     protected $attributes = [];
+
     public function user()
     {
         return $this->belongsTo('App\User');
+    }
+
+    public static function getFirstById($id)
+    {
+        return static::with('user')->where('id', '=', $id)->first();
+
     }
 
     public static function rules($merge = [])
@@ -52,7 +59,7 @@ class Job extends Model
                 'description' => 'required',
                 'category' => 'required',
                 'role_type' => 'required|in:freelance,full_time,part_time',
-                'active' => 'required',
+                'active' => 'required|boolean',
             ],
             $merge
         );
