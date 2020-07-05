@@ -4,6 +4,7 @@ Homestead.json
 Homestead.yaml
 .env
 .phpunit.result.cache
+/database/database.sqlite
 /public/shots
 /public/docs
 /resources/docs
