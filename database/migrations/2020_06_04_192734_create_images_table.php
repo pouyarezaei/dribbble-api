@@ -18,6 +18,7 @@ class CreateImagesTable extends Migration
             $table->unsignedInteger('shot_id');
             $table->foreign('shot_id')->references('id')->on('shots')->onDelete('cascade');
             $table->string('image');
+            $table->boolean('poster')->default(false);
             $table->timestamps();
         });
     }
